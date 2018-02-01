@@ -1,0 +1,21 @@
+language: bash
+services: docker
+
+env:
+  - VARIANT=fpm
+  - VARIANT=cli
+
+install:
+  - git clone https://github.com/docker-library/official-images.git ~/official-images
+
+before_script:
+  - env | sort
+  - cd "$VARIANT"
+  - image="joshbetz/wordpress:${VARIANT}"
+
+script:
+  - travis_retry docker build -t "$image" .
+  - ~/official-images/test/run.sh "$image"
+
+after_script:
+  - docker images
