@@ -12,3 +12,6 @@ RUN set -ex; \
 	echo "$WPCLI_SHA512 /usr/local/bin/wp" | sha512sum -c -; \
 	chmod +x /usr/local/bin/wp; \
 	wp --allow-root --version
+
+USER www-data
+CMD ["wp", "shell"]
