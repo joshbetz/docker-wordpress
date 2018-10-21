@@ -1,5 +1,13 @@
 FROM joshbetz/wordpress
 
+RUN set -ex; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		less \
+	; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/src/wordpress
 
 ENV WPCLI_VERSION 2.0.1
