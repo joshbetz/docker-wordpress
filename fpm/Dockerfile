@@ -34,4 +34,7 @@ RUN set -ex; \
 VOLUME /usr/src/wordpress
 COPY ./wp-config.php /usr/src/wordpress
 
+RUN mkdir -p /var/www/html/wp-content/plugins \
+	&& mkdir -p /var/www/html/wp-content/themes \
+	&& chown -R www-data:www-data /var/www/html
 VOLUME /var/www/html
