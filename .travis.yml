@@ -2,7 +2,7 @@ language: bash
 services: docker
 
 env:
-  - VARIANT=fpm
+  - VARIANT=latest
   - VARIANT=cli
 
 before_script:
