@@ -37,4 +37,7 @@ COPY ./wp-config.php /usr/src/wordpress
 RUN mkdir -p /var/www/html/wp-content/plugins \
 	&& mkdir -p /var/www/html/wp-content/themes \
 	&& chown -R www-data:www-data /var/www/html
+
+USER www-data
+
 VOLUME /var/www/html
