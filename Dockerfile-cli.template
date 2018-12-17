@@ -1,5 +1,6 @@
 FROM joshbetz/wordpress
 
+USER root
 RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
