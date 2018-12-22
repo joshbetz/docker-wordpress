@@ -5,14 +5,8 @@ env:
   - VARIANT=fpm
   - VARIANT=cli
 
-before_script:
-  - env | sort
-  - cd "$VARIANT"
-  - image="joshbetz/wordpress:${VARIANT}"
-
 script:
-  - travis_retry docker build -t "$image" .
-  - ../test/run.sh "$image"
+  - test/run.sh "$VARIANT"
 
 after_script:
   - docker images
