@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -11,7 +11,7 @@ RUN set -ex; \
 	; \
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install gd mysqli opcache; \
-	pecl install memcached-3.0.4; \
+	pecl install memcached-3.1.1; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
