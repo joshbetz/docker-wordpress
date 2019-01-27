@@ -5,8 +5,8 @@ foreach( glob( '/var/www/html/wp-config/*.php' ) as $config ) {
 }
 
 define( 'DB_NAME', $_ENV['WORDPRESS_DB_NAME'] );
-define( 'DB_USER', $_ENV['WORDPRESS_DB_USER'] );
-define( 'DB_PASSWORD', $_ENV['WORDPRESS_DB_PASSWORD'] );
+define( 'DB_USER', $_ENV['MYSQL_USER'] ?? $_ENV['WORDPRESS_DB_USER'] );
+define( 'DB_PASSWORD', $_ENV['MYSQL_PASSWORD'] ?? $_ENV['WORDPRESS_DB_PASSWORD'] );
 define( 'DB_HOST', $_ENV['WORDPRESS_DB_HOST'] );
 
 define( 'AUTH_KEY', $_ENV['WORDPRESS_AUTH_KEY'] );
