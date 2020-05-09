@@ -9,7 +9,7 @@ RUN set -ex; \
 		libmemcached-dev \
 		zlib1g-dev \
 	; \
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+	docker-php-ext-configure gd --with-jpeg; \
 	docker-php-ext-install gd mysqli opcache; \
 	pecl install memcached-3.1.4; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
