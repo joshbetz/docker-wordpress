@@ -41,3 +41,7 @@ RUN mkdir -p /var/www/html/wp-content/plugins \
 USER www-data
 
 VOLUME /var/www/html
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php-fpm"]
