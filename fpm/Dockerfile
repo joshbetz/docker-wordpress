@@ -20,8 +20,8 @@ RUN set -ex; \
 COPY opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
-ENV WORDPRESS_VERSION 5.7.1
-ENV WORDPRESS_SHA1 296bc228c4f4d67d7da8814079f86516f6c2337d
+ENV WORDPRESS_VERSION 5.8
+ENV WORDPRESS_SHA1 6476e69305ba557694424b04b9dea7352d988110
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
