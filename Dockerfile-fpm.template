@@ -11,7 +11,8 @@ RUN set -ex; \
 	; \
 	docker-php-ext-configure gd --with-jpeg; \
 	docker-php-ext-install gd mysqli opcache; \
-	pecl install memcached-3.1.4; \
+	pecl install memcache-4.0.5.2; \
+	pecl install memcached-3.1.5; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
