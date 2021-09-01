@@ -18,7 +18,7 @@ sed \
 	$DIR/Dockerfile-fpm.template > $DIR/fpm/Dockerfile
 
 # Build new image if there are changes
-if ! git diff --quiet --exit-code $DIR/fpm/Dockerfile; then
+if ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
 	docker build -t joshbetz/wordpress $DIR/fpm
@@ -36,7 +36,7 @@ sed \
 	$DIR/Dockerfile-cli.template > $DIR/cli/Dockerfile
 
 # Build new image if there are changes
-if ! git diff --quiet --exit-code $DIR/cli/Dockerfile; then
+if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/cli/Dockerfile
 
 	docker build -t joshbetz/wordpress:cli $DIR/cli
