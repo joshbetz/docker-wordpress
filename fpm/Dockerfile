@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:7.4-fpm
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -11,8 +11,10 @@ RUN set -ex; \
 	; \
 	docker-php-ext-configure gd --with-jpeg; \
 	docker-php-ext-install gd mysqli opcache; \
-	pecl install memcache-8.0; \
+	pecl install memcache-4.0.5.2; \
+	docker-php-ext-enable memcache; \
 	pecl install memcached-3.1.5; \
+	docker-php-ext-enable memcached; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
