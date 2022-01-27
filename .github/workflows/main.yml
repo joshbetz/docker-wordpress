@@ -13,6 +13,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - uses: actions/checkout@v2
-      - run: ls -lah "${GITHUB_WORKSPACE}/build.sh"
+      - run: ls -lah "${GITHUB_WORKSPACE}"
       - run: ./build.sh
       - run: ./ci.sh
