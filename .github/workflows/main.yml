@@ -13,6 +13,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - uses: actions/checkout@v2
-      - run: ./build.sh
-        shell: bash
+      - run: |
+          sh ./build.sh
       - run: ./ci.sh
