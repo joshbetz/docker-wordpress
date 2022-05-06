@@ -21,11 +21,8 @@ sed \
 if ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
-	docker build -t joshbetz/wordpress $DIR/fpm
-	docker push joshbetz/wordpress
-
-	docker build -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
-	docker push joshbetz/wordpress:$WORDPRESS_VERSION
+	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
+	docker push --all-tags
 fi
 
 ###
@@ -40,12 +37,9 @@ sed \
 	$DIR/Dockerfile-cli.template > $DIR/cli/Dockerfile
 
 # Build new image if there are changes
-if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DIR/fpm; then
+if ! git diff --quiet --exit-code $DIR/cli; then
 	git diff $DIR/cli/Dockerfile
 
-	docker build -t joshbetz/wordpress:cli $DIR/cli
-	docker push joshbetz/wordpress:cli
-
-	docker build -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
-	docker push joshbetz/wordpress:cli-$WPCLI_VERSION
+	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
+	docker push --all-tags
 fi
