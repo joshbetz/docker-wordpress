@@ -18,11 +18,11 @@ sed \
 	$DIR/Dockerfile-fpm.template > $DIR/fpm/Dockerfile
 
 # Build new image if there are changes
-if ! git diff --quiet --exit-code $DIR/fpm; then
+if true || ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
 	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
-	docker push joshbetz/wordpress:latest
+	docker push joshbetz/wordpress
 	docker push joshbetz/wordpress:$WORDPRESS_VERSION
 fi
 
