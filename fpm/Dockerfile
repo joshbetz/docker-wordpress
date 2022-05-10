@@ -5,17 +5,28 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libjpeg-dev \
-		libpng-dev \
+		libmagickwand-dev \
 		libmemcached-dev \
+		libpng-dev \
+		libzip-dev \
 		unzip \
 		zlib1g-dev \
 	; \
 	docker-php-ext-configure gd --with-jpeg; \
-	docker-php-ext-install gd mysqli opcache; \
+	docker-php-ext-install \
+		exif \
+		gd \
+		intl \
+		mysqli \
+		opcache \
+		zip \
+	; \
 	pecl install memcache-8.0; \
 	docker-php-ext-enable memcache; \
 	pecl install memcached-3.2.0; \
 	docker-php-ext-enable memcached; \
+	pecl install imagick-3.7.0; \
+	docker-php-ext-enable imagick; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
