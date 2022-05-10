@@ -49,17 +49,16 @@ RUN set -ex; \
 VOLUME /usr/src/wordpress
 COPY ./wp-config.php /usr/src/wordpress
 
+COPY install-dropin /usr/local/bin/
+
 RUN mkdir -p /var/www/html/wp-content/plugins \
 	&& mkdir -p /var/www/html/wp-content/themes \
+	&& install-dropin memcached object-cache.php \
 	&& chown -R www-data:www-data /var/www/html
 
 USER www-data
 
 VOLUME /var/www/html
-
-COPY install-dropin /usr/local/bin/
-
-RUN install-dropin memcached object-cache.php
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
