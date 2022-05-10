@@ -1,0 +1,17 @@
+#!/bin/bash
+
+plugin=$1
+dropin=$2
+
+set -exo pipefail
+
+mkdir -p /var/www/html/wp-content/mu-plugins
+
+curl "https://downloads.wordpress.org/plugin/${plugin}.zip" \
+	--output "${plugin}.zip"
+
+unzip "${plugin}.zip"
+
+mv "./${plugin}/${dropin}" /var/www/html/wp-content/
+
+rm "${plugin}.zip"

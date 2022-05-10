@@ -7,6 +7,7 @@ RUN set -ex; \
 		libjpeg-dev \
 		libpng-dev \
 		libmemcached-dev \
+		unzip \
 		zlib1g-dev \
 	; \
 	docker-php-ext-configure gd --with-jpeg; \
@@ -44,6 +45,10 @@ RUN mkdir -p /var/www/html/wp-content/plugins \
 USER www-data
 
 VOLUME /var/www/html
+
+COPY install-dropin /usr/local/bin/
+
+RUN install-dropin memcached object-cache.php
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
