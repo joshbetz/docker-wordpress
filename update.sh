@@ -37,8 +37,8 @@ sed \
 	-e "s/%%WPCLI_SHA512%%/${WPCLI_SHA512}/g" \
 	$DIR/Dockerfile-cli.template > $DIR/cli/Dockerfile
 
-# Build new image if there are changes
-if ! git diff --quiet --exit-code $DIR/cli; then
+# Build new image if there are changes in CLI or fpm (which are inherited by CLI)
+if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/cli/Dockerfile
 
 	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
