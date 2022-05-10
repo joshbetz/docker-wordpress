@@ -22,7 +22,8 @@ if ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
 	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
-	docker push --all-tags joshbetz/wordpress
+	docker push joshbetz/wordpress:latest
+	docker push joshbetz/wordpress:$WORDPRESS_VERSION
 fi
 
 ###
@@ -41,5 +42,6 @@ if ! git diff --quiet --exit-code $DIR/cli; then
 	git diff $DIR/cli/Dockerfile
 
 	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
-	docker push --all-tags joshbetz/wordpress
+	docker push joshbetz/wordpress:cli
+	docker push joshbetz/wordpress:cli-$WPCLI_VERSION
 fi

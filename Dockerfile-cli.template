@@ -22,5 +22,8 @@ RUN set -ex; \
 	chmod +x /usr/local/bin/wp; \
 	wp --allow-root --version
 
+COPY wp-cli.yml /
+ENV WP_CLI_CONFIG_PATH /wp-cli.yml
+
 USER www-data
 CMD ["wp", "shell"]
