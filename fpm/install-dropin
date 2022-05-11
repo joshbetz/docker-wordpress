@@ -15,3 +15,4 @@ unzip "${plugin}.zip"
 mv "./${plugin}/${dropin}" /var/www/html/wp-content/
 
 rm "${plugin}.zip"
+rm -rf "${plugin}"
