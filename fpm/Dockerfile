@@ -51,10 +51,11 @@ COPY ./wp-config.php /usr/src/wordpress
 
 COPY install-dropin /usr/local/bin/
 
-RUN mkdir -p /var/www/html/wp-content/plugins \
-	&& mkdir -p /var/www/html/wp-content/themes \
+RUN mkdir -p /var/www/html/wp-content \
+	&& mkdir /var/www/html/wp-content/plugins \
+	&& mkdir /var/www/html/wp-content/themes \
 	&& install-dropin memcached object-cache.php \
-	&& chown -R www-data:www-data /var/www/html
+	&& chown -R www-data:www-data /var/www/html/wp-content
 
 USER www-data
 
