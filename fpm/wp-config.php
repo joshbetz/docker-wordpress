@@ -21,7 +21,7 @@ define( 'NONCE_SALT', $_ENV['WORDPRESS_NONCE_SALT'] );
 $table_prefix = 'wp_';
 
 # content directory
-define( 'WP_CONTENT_DIR', '/var/www/html/wp-content' );
+defined( 'WP_CONTENT_DIR' ) || define( 'WP_CONTENT_DIR', '/var/www/html/wp-content' );
 
 /* That's all, stop editing! Happy blogging. */
 
