@@ -46,7 +46,6 @@ RUN set -ex; \
 	chown -R www-data:www-data /usr/src/wordpress
 
 # install wp-config.php
-VOLUME /usr/src/wordpress
 COPY ./wp-config.php /usr/src/wordpress
 
 COPY install-dropin /usr/local/bin/
@@ -58,8 +57,6 @@ RUN mkdir -p /var/www/html/wp-content \
 	&& chown -R www-data:www-data /var/www/html/wp-content
 
 USER www-data
-
-VOLUME /var/www/html
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
