@@ -38,7 +38,6 @@ RUN set -ex; \
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
-COPY opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
 ENV WORDPRESS_VERSION 5.9.3
