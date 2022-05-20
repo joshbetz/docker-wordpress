@@ -21,12 +21,18 @@ RUN set -ex; \
 		opcache \
 		zip \
 	; \
-	pecl install memcache-8.0; \
-	docker-php-ext-enable memcache; \
-	pecl install memcached-3.2.0; \
-	docker-php-ext-enable memcached; \
-	pecl install imagick-3.7.0; \
-	docker-php-ext-enable imagick; \
+	pecl install \
+		apcu-5.1.21 \
+		imagick-3.7.0 \
+		memcache-8.0 \
+		memcached-3.2.0 \
+	; \
+	docker-php-ext-enable \
+		apcu \
+		imagick \
+		memcache \
+		memcached \
+	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
