@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 
-$DIR/update.sh
+$DIR/update.sh push
 
 WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
 git commit $DIR/fpm -m "WordPress $WORDPRESS_VERSION"

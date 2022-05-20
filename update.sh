@@ -4,6 +4,8 @@ set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+action=$1
+
 which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 
 ###
@@ -22,8 +24,11 @@ if ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
 	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
-	docker push joshbetz/wordpress
-	docker push joshbetz/wordpress:$WORDPRESS_VERSION
+
+	if [[ "push" -eq "$action" ]]; then
+		docker push joshbetz/wordpress
+		docker push joshbetz/wordpress:$WORDPRESS_VERSION
+	fi
 fi
 
 ###
@@ -42,6 +47,9 @@ if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DI
 	git diff $DIR/cli/Dockerfile
 
 	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
-	docker push joshbetz/wordpress:cli
-	docker push joshbetz/wordpress:cli-$WPCLI_VERSION
+
+	if [[ "push" -eq "$action" ]]; then
+		docker push joshbetz/wordpress:cli
+		docker push joshbetz/wordpress:cli-$WPCLI_VERSION
+	fi
 fi
