@@ -46,10 +46,11 @@ sed \
 if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/cli/Dockerfile
 
-	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:cli-$WPCLI_VERSION $DIR/cli
+	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION $DIR/cli
 
 	if [[ "push" -eq "$action" ]]; then
 		docker push joshbetz/wordpress:cli
-		docker push joshbetz/wordpress:cli-$WPCLI_VERSION
+		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli
+		docker push joshbetz/wordpress:$WORDPRESS_VERISON-cli-$WPCLI_VERSION
 	fi
 fi
