@@ -51,6 +51,6 @@ if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DI
 	if [[ "push" -eq "$action" ]]; then
 		docker push joshbetz/wordpress:cli
 		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli
-		docker push joshbetz/wordpress:$WORDPRESS_VERISON-cli-$WPCLI_VERSION
+		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION
 	fi
 fi
