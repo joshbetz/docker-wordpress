@@ -7,7 +7,10 @@ set -exo pipefail
 
 mkdir -p /var/www/wp-content/mu-plugins
 
-curl "https://downloads.wordpress.org/plugin/${plugin}.zip" \
+version=$(curl -s "https://api.wordpress.org/plugins/info/1.0/${plugin}.json" | jq -r .version)
+curl "https://downloads.wordpress.org/plugin/${plugin}.${version}.zip" \
+	--output "${plugin}.zip" \
+|| curl "https://downloads.wordpress.org/plugin/${plugin}.zip" \
 	--output "${plugin}.zip"
 
 unzip "${plugin}.zip"
