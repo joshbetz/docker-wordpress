@@ -4,6 +4,7 @@ FROM php:8.1-fpm
 RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+		jq \
 		libjpeg-dev \
 		libmagickwand-dev \
 		libmemcached-dev \
