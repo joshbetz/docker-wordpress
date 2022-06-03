@@ -1,0 +1,41 @@
+#!/bin/bash
+
+plugin=$1
+plugin=(${plugin//\// })
+directory=${2:-mu-plugins}
+
+set -ex
+
+case "$directory" in
+	'mu-plugins')
+		DIRECTORY=/var/www/wp-content/mu-plugins
+		;;
+	'plugins')
+		DIRECTORY=/var/www/wp-content/plugins
+		;;
+	'themes')
+		DIRECTORY=/var/www/wp-content/themes
+		;;
+esac;
+
+mkdir -p "$DIRECTORY"
+
+curl -L -o "${plugin[1]}.tar.gz" \
+	"http://github.com/${plugin[0]}/${plugin[1]}/tarball/master/"
+
+plugin="${plugin[1]}"
+
+mkdir -p "/var/www/wp-content/${directory}/${plugin}"
+tar -xzf "${plugin}.tar.gz" --strip-components 1 -C "${DIRECTORY}/${plugin}"
+
+# Symlink main plugin file into mu-plugins directory
+if [[ "$directory" == "mu-plugins" ]]; then
+	cd /var/www/wp-content/mu-plugins
+
+	[[ -f "/var/www/wp-content/mu-plugins/${plugin}/${plugin}.php" ]] &&
+		ln -s "${plugin}/${plugin}.php" .
+
+	cd -
+fi 
+
+rm "${plugin}.tar.gz"
