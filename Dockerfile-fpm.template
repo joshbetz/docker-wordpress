@@ -52,7 +52,7 @@ RUN set -ex; \
 	chown -R www-data:www-data /usr/src/wordpress
 
 # install wp-config.php
-COPY ./wp-config.php /usr/src/wordpress
+COPY --chown=www-data:www-data ./wp-config.php /usr/src/wordpress
 
 COPY install-* /usr/local/bin/
 
