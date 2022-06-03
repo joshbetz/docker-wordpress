@@ -54,7 +54,7 @@ RUN set -ex; \
 # install wp-config.php
 COPY ./wp-config.php /usr/src/wordpress
 
-COPY install-dropin /usr/local/bin/
+COPY install-* /usr/local/bin/
 
 RUN mkdir -p /var/www/wp-content \
 	&& mkdir /var/www/wp-content/plugins \
