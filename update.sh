@@ -11,10 +11,12 @@ which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 ###
 # WordPress Dockerfile
 ###
+PHP_VERSION="$(curl -s 'https://www.php.net/releases/?json&version=8.1' | jq -r .version)"
 WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
 WORDPRESS_SHA1="$(curl -fsSL "https://wordpress.org/wordpress-$WORDPRESS_VERSION.tar.gz.sha1")"
 
 sed \
+	-e "s/%%PHP_VERSION%%/${PHP_VERSION}/g" \
 	-e "s/%%WORDPRESS_VERSION%%/${WORDPRESS_VERSION}/g" \
 	-e "s/%%WORDPRESS_SHA1%%/${WORDPRESS_SHA1}/g" \
 	$DIR/Dockerfile-fpm.template > $DIR/fpm/Dockerfile
@@ -25,7 +27,7 @@ if ! git diff --quiet --exit-code $DIR/fpm; then
 
 	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
 
-	if [[ "push" -eq "$action" ]]; then
+	if [[ "push" == "$action" ]]; then
 		docker push joshbetz/wordpress
 		docker push joshbetz/wordpress:$WORDPRESS_VERSION
 	fi
@@ -48,7 +50,7 @@ if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DI
 
 	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION $DIR/cli
 
-	if [[ "push" -eq "$action" ]]; then
+	if [[ "push" == "$action" ]]; then
 		docker push joshbetz/wordpress:cli
 		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli
 		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION
