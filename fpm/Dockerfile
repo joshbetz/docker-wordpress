@@ -59,11 +59,10 @@ COPY install-* /usr/local/bin/
 RUN mkdir -p /var/www/wp-content \
 	&& mkdir /var/www/wp-content/plugins \
 	&& mkdir /var/www/wp-content/themes \
+	&& install-dropin memcached object-cache.php \
 	&& chown -R www-data:www-data /var/www/wp-content
 
 USER www-data
-
-RUN install-dropin memcached object-cache.php
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
