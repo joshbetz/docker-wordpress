@@ -1,29 +1,25 @@
 #!/bin/bash
 
+usage() {
+	echo "Usage: $0 <repo> <plugin> [<directory>]"
+	exit 1
+}
+
 repo=$1
 plugin=$2
-directory=${3:-mu-plugins}
+directory=$3
+
+[[ -z "$repo" ]] && usage
+[[ -z "$plugin" ]] && usage
 
 set -exo pipefail
 
-case "$directory" in
-	'mu-plugins')
-		DIRECTORY=/var/www/wp-content/mu-plugins
-		;;
-	'plugins')
-		DIRECTORY=/var/www/wp-content/plugins
-		;;
-	'themes')
-		DIRECTORY=/var/www/wp-content/themes
-		;;
-esac;
-
 case "$repo" in
-	'plugin')
+	'plugin' | 'plugins' | 'mu-plugin' | 'mu-plugins')
 		version=$(curl -s "https://api.wordpress.org/plugins/info/1.0/${plugin}.json" | jq -r .version)
 		;;
 
-	'theme')
+	'theme' | 'themes')
 		version=$(curl -s "http://api.wordpress.org/themes/info/1.2/?action=theme_information&request%5Bslug%5D=${plugin}" | jq -r .version)
 		;;
 
@@ -32,6 +28,32 @@ case "$repo" in
 		exit 1
 		;;
 esac;
+
+if [[ ! -z "$directory" ]]; then
+	case "$directory" in
+		'plugins')
+			DIRECTORY=/var/www/wp-content/plugins
+			;;
+		'themes')
+			DIRECTORY=/var/www/wp-content/themes
+			;;
+		'mu-plugins' | *)
+			DIRECTORY=/var/www/wp-content/mu-plugins
+			;;
+	esac;
+else
+	case "$repo" in
+		'plugin' | 'plugins')
+			DIRECTORY=/var/www/wp-content/plugins
+			;;
+		'theme' | 'themes')
+			DIRECTORY=/var/www/wp-content/themes
+			;;
+		'mu-plugin' | 'mu-plugins' | *)
+			DIRECTORY=/var/www/wp-content/mu-plugins
+			;;
+	esac;
+fi
 
 mkdir -p "$DIRECTORY"
 
