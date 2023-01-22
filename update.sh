@@ -11,7 +11,7 @@ which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 ###
 # WordPress Dockerfile
 ###
-PHP_VERSION="$(curl -s 'https://www.php.net/releases/?json&version=8.1' | jq -r .version)"
+PHP_VERSION="$(curl -s 'https://www.php.net/releases/?json&version=8.2' | jq -r .version)"
 WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
 WORDPRESS_SHA1="$(curl -fsSL "https://wordpress.org/wordpress-$WORDPRESS_VERSION.tar.gz.sha1")"
 
