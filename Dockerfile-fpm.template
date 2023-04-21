@@ -23,7 +23,7 @@ RUN set -ex; \
 		zip \
 	; \
 	pecl install \
-		apcu-5.1.21 \
+		apcu-5.1.22 \
 		imagick-3.7.0 \
 		memcache-8.0 \
 		memcached-3.2.0 \
