@@ -9,6 +9,7 @@ RUN set -ex; \
 		libmagickwand-dev \
 		libmemcached-dev \
 		libpng-dev \
+		libssl-dev \
 		libzip-dev \
 		unzip \
 		zlib1g-dev \
