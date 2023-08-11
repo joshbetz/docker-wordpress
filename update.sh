@@ -4,15 +4,16 @@ set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-action=$1
+PHP_VERSION=$1
+WORDPRESS_VERSION=$2
+WPCLI_VERSION=$3
+action=$4
 
 which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 
 ###
 # WordPress Dockerfile
 ###
-PHP_VERSION="$(curl -s 'https://www.php.net/releases/?json&version=8.2' | jq -r .version)"
-WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
 WORDPRESS_SHA1="$(curl -fsSL "https://wordpress.org/wordpress-$WORDPRESS_VERSION.tar.gz.sha1")"
 
 sed \
@@ -36,7 +37,6 @@ fi
 ###
 # WP-CLI Dockerfile
 ###
-WPCLI_VERSION="$(curl -fsSL https://api.github.com/repos/wp-cli/wp-cli/releases/latest | jq -r '.tag_name' | sed -e 's/^v//g' )"
 WPCLI_SHA512="$(curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar.sha512")"
 
 sed \
