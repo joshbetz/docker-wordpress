@@ -5,17 +5,26 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		jq \
+		libfreetype6-dev \
+		libicu-dev \
+		libjpeg-dev \
 		libjpeg-dev \
 		libmagickwand-dev \
 		libmemcached-dev \
 		libpng-dev \
 		libssl-dev \
+		libwebp-dev \
 		libzip-dev \
 		unzip \
 		zlib1g-dev \
 	; \
-	docker-php-ext-configure gd --with-jpeg; \
-	docker-php-ext-install \
+	docker-php-ext-configure gd \
+		--with-freetype \
+		--with-jpeg \
+		--with-webp \
+	; \
+	docker-php-ext-install -j $(nproc) \
+		bcmath \
 		exif \
 		gd \
 		intl \
@@ -32,6 +41,7 @@ RUN set -ex; \
 	; \
 	docker-php-ext-enable \
 		apcu \
+		igbinary \
 		imagick \
 		memcache \
 		memcached \
