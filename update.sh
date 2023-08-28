@@ -20,15 +20,20 @@ sed \
 	-e "s/%%WORDPRESS_SHA1%%/${WORDPRESS_SHA1}/g" \
 	$DIR/Dockerfile-fpm.template > $DIR/fpm/Dockerfile
 
+docker buildx create --name wordpress --use --bootstrap
+
 # Build new image if there are changes
 if ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/fpm/Dockerfile
 
-	docker build -t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
-
 	if [[ "push" == "$action" ]]; then
-		docker push joshbetz/wordpress
-		docker push joshbetz/wordpress:$WORDPRESS_VERSION
+		docker buildx build --push \
+			--platform linux/amd64,linux/arm64 \
+			-t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
+	else
+		docker buildx build \
+			--platform linux/amd64,linux/arm64 \
+			-t joshbetz/wordpress -t joshbetz/wordpress:$WORDPRESS_VERSION $DIR/fpm
 	fi
 fi
 
@@ -46,11 +51,13 @@ sed \
 if ! git diff --quiet --exit-code $DIR/cli || ! git diff --quiet --exit-code $DIR/fpm; then
 	git diff $DIR/cli/Dockerfile
 
-	docker build -t joshbetz/wordpress:cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION $DIR/cli
-
 	if [[ "push" == "$action" ]]; then
-		docker push joshbetz/wordpress:cli
-		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli
-		docker push joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION
+		docker buildx build --push \
+			--platform linux/amd64,linux/arm64 \
+			-t joshbetz/wordpress:cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION $DIR/cli
+	else
+		docker buildx build \
+			--platform linux/amd64,linux/arm64 \
+			-t joshbetz/wordpress:cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli -t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION $DIR/cli
 	fi
 fi
