@@ -25,6 +25,7 @@ RUN set -ex; \
 	; \
 	pecl install \
 		apcu-5.1.22 \
+		igbinary-3.2.14 \
 		imagick-3.7.0 \
 		memcache-8.0 \
 		memcached-3.2.0 \
