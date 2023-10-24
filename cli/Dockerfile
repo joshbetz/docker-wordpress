@@ -12,8 +12,8 @@ RUN set -ex; \
 
 WORKDIR /usr/src/wordpress
 
-ENV WPCLI_VERSION 
-ENV WPCLI_SHA512 
+ENV WPCLI_VERSION 2.8.1
+ENV WPCLI_SHA512 c1d40ee90b330ca1f8ddbed14b938b41ec5d9ff723c7c1cf3f41a2d9a1b271079a51a37ea3d1c9aa9c628fdd43449dba3995a8de150a68abbd505b06b91d9d2b
 
 # Install wp-cli
 RUN set -ex; \
