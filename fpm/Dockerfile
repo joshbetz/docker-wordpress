@@ -1,4 +1,4 @@
-FROM php:8.2.12-fpm
+FROM php:-fpm
 
 # install the PHP extensions we need
 RUN set -ex; \
