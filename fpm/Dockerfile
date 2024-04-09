@@ -53,8 +53,8 @@ RUN set -ex; \
 # see https://secure.php.net/manual/en/opcache.installation.php
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
-ENV WORDPRESS_VERSION 6.5
-ENV WORDPRESS_SHA1 fe10ab388318fa5a0085aff48b2b7590cf8b93f9
+ENV WORDPRESS_VERSION 6.5.2
+ENV WORDPRESS_SHA1 b70701b5426891ca1f8ff9b3cd96653e2b60d7e9
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
