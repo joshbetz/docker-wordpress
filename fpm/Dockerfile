@@ -54,7 +54,7 @@ RUN set -ex; \
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
 ENV WORDPRESS_VERSION 6.5.2
-ENV WORDPRESS_SHA1 b70701b5426891ca1f8ff9b3cd96653e2b60d7e9
+ENV WORDPRESS_SHA1 
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
