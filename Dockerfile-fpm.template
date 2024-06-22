@@ -74,7 +74,7 @@ RUN mkdir -p /var/www/wp-content \
 	&& mkdir /var/www/wp-content/plugins \
 	&& mkdir /var/www/wp-content/themes \
 	&& install-github-dropin automattic/wp-memcached object-cache.php \
-	&& chown -R www-data:www-data /var/www/wp-content
+	&& chown -R www-data:www-data /var/www
 
 USER www-data
 WORKDIR /var/www
