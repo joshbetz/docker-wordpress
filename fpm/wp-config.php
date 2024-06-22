@@ -23,6 +23,10 @@ $table_prefix = 'wp_';
 # content directory
 defined( 'WP_CONTENT_DIR' ) || define( 'WP_CONTENT_DIR', '/var/www/wp-content' );
 
+if ( file_exists( '/var/www/vendor/autoload.php' ) ) {
+	require_once '/var/www/vendor/autoload.php';
+}
+
 /* That's all, stop editing! Happy blogging. */
 
 if ( ! defined( 'ABSPATH' ) ) {
