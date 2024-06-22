@@ -49,6 +49,8 @@ RUN set -ex; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
@@ -75,6 +77,10 @@ RUN mkdir -p /var/www/wp-content \
 	&& chown -R www-data:www-data /var/www/wp-content
 
 USER www-data
+WORKDIR /var/www
+
+RUN composer init -n --name wordpress/wordpress \
+       && composer config --no-plugins allow-plugins.composer/installers true
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
