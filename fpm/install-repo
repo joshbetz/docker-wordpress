@@ -70,8 +70,13 @@ unzip "${plugin}.zip" -d "$DIRECTORY"
 if [[ "$directory" == "mu-plugins" ]]; then
 	cd /var/www/wp-content/mu-plugins
 
-	[[ -f "/var/www/wp-content/mu-plugins/${plugin}/${plugin}.php" ]] &&
+	if [[ -f "/var/www/wp-content/mu-plugins/${plugin}/${plugin}.php" ]]; then
 		ln -s "${plugin}/${plugin}.php" .
+	elif [[ -f "/var/www/wp-content/mu-plugins/${plugin}/plugin.php" ]]; then
+		ln -s "${plugin}/plugin.php" "./${plugin}.php"
+	elif [[ -f "/var/www/wp-content/mu-plugins/${plugin}/index.php" ]]; then
+		ln -s "${plugin}/index.php" "./${plugin}.php"
+	fi
 
 	cd -
 fi 
