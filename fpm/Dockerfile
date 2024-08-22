@@ -56,7 +56,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
 ENV WORDPRESS_VERSION 6.6.1
-ENV WORDPRESS_SHA1 cd5544c85824e3cd8105018c63ccdba31883d881
+ENV WORDPRESS_SHA1 
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
