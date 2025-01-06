@@ -7,6 +7,11 @@ WORDPRESS_VERSION=$2
 WPCLI_VERSION=$3
 action=$4
 
+if [ -z "$PHP_VERSION" ] || [ -z "$WORDPRESS_VERSION" ] || [ -z "$WPCLI_VERSION" ]; then
+	echo "Usage: $0 <PHP_VERSION> <WORDPRESS_VERSION> <WPCLI_VERSION> [push]"
+	exit 1
+fi
+
 which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
 
 ###
