@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.2-fpm
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -34,7 +34,7 @@ RUN set -ex; \
 	; \
 	pecl install \
 		apcu-5.1.23 \
-		igbinary-3.2.16 \
+		igbinary-3.2.15 \
 		imagick-3.7.0 \
 		memcache-8.2 \
 		memcached-3.2.0 \
@@ -55,8 +55,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 # see https://secure.php.net/manual/en/opcache.installation.php
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
-ENV WORDPRESS_VERSION 6.7.1
-ENV WORDPRESS_SHA1 dfb745d4067368bb9a9491f2b6f7e8d52d740fd1
+ENV WORDPRESS_VERSION 6.7.2
+ENV WORDPRESS_SHA1 ff727df89b694749e91e357dc2329fac620b3906
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
