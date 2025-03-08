@@ -5,10 +5,10 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		jq \
+		libavif-dev \
 		libfreetype6-dev \
 		libicu-dev \
-		libjpeg-dev \
-		libjpeg-dev \
+]		libjpeg-dev \
 		libmagickwand-dev \
 		libmemcached-dev \
 		libpng-dev \
@@ -19,6 +19,7 @@ RUN set -ex; \
 		zlib1g-dev \
 	; \
 	docker-php-ext-configure gd \
+		--with-avif \
 		--with-freetype \
 		--with-jpeg \
 		--with-webp \
