@@ -8,7 +8,7 @@ RUN set -ex; \
 		libavif-dev \
 		libfreetype6-dev \
 		libicu-dev \
-]		libjpeg-dev \
+		libjpeg-dev \
 		libmagickwand-dev \
 		libmemcached-dev \
 		libpng-dev \
