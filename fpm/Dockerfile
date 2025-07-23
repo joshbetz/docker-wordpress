@@ -34,11 +34,11 @@ RUN set -ex; \
 		zip \
 	; \
 	pecl install \
-		apcu-5.1.23 \
-		igbinary-3.2.15 \
-		imagick-3.7.0 \
+		apcu-5.1.24 \
+		igbinary-3.2.16 \
+		imagick-3.8.0 \
 		memcache-8.2 \
-		memcached-3.2.0 \
+		memcached-3.3.0 \
 	; \
 	docker-php-ext-enable \
 		apcu \
