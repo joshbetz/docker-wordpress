@@ -1,15 +1,48 @@
 #!/bin/bash
+#
+# CI script that checks for updates, generates Dockerfiles, and builds/pushes images.
+# This is the main entry point for the CI workflow.
+#
+# Usage: ./ci.sh [push]
+#
+# Options:
+#   push    Push images to Docker Hub after building
+#
 
-which jq > /dev/null || ( echo "Error: jq is required" && exit 1 )
-
-PHP_VERSION='8.3'
-PHP_VERSION="$(curl -s "https://www.php.net/releases/?json&version=${PHP_VERSION}" | jq -r .version)"
-WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
-WPCLI_VERSION="$(curl -fsSL https://api.github.com/repos/wp-cli/wp-cli/releases/latest | jq -r '.tag_name' | sed -e 's/^v//g' )"
+set -eo pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-$DIR/update.sh "$PHP_VERSION" "$WORDPRESS_VERSION" "$WPCLI_VERSION" push || (echo "Failed to update" && exit 1)
+action=$1
 
-git commit $DIR/fpm -m "WordPress $WORDPRESS_VERSION"
-git commit $DIR/cli -m "WP-CLI $WPCLI_VERSION"
-git push
+# Update Dockerfiles from templates
+$DIR/update.sh
+
+# Check if there are changes
+if git diff --quiet --exit-code $DIR/fpm $DIR/cli; then
+	echo "No changes detected. Exiting."
+	exit 0
+fi
+
+# Show changes
+git diff $DIR/fpm/Dockerfile $DIR/cli/Dockerfile
+
+# Build and optionally push
+$DIR/build.sh $action
+
+# Commit changes (if running in CI)
+if [ -n "$CI" ]; then
+	WORDPRESS_VERSION=$(grep -oP 'ENV WORDPRESS_VERSION \K.*' $DIR/fpm/Dockerfile)
+	WPCLI_VERSION=$(grep -oP 'ENV WPCLI_VERSION \K.*' $DIR/cli/Dockerfile)
+
+	if ! git diff --quiet --exit-code $DIR/fpm; then
+		git add $DIR/fpm
+		git commit -m "WordPress $WORDPRESS_VERSION"
+	fi
+
+	if ! git diff --quiet --exit-code $DIR/cli; then
+		git add $DIR/cli
+		git commit -m "WP-CLI $WPCLI_VERSION"
+	fi
+
+	git push
+fi

@@ -14,38 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for upstream updates
-        id: check
-        run: |
-          PHP_VERSION='8.3'
-          PHP_VERSION="$(curl -s "https://www.php.net/releases/?json&version=${PHP_VERSION}" | jq -r .version)"
-          WORDPRESS_VERSION="$(curl -fsSL 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
-          WPCLI_VERSION="$(curl -fsSL https://api.github.com/repos/wp-cli/wp-cli/releases/latest | jq -r '.tag_name' | sed -e 's/^v//g')"
-
-          echo "PHP_VERSION=$PHP_VERSION" >> $GITHUB_OUTPUT
-          echo "WORDPRESS_VERSION=$WORDPRESS_VERSION" >> $GITHUB_OUTPUT
-          echo "WPCLI_VERSION=$WPCLI_VERSION" >> $GITHUB_OUTPUT
-
       - name: Generate Dockerfiles from templates
-        run: |
-          PHP_VERSION="${{ steps.check.outputs.PHP_VERSION }}"
-          WORDPRESS_VERSION="${{ steps.check.outputs.WORDPRESS_VERSION }}"
-          WPCLI_VERSION="${{ steps.check.outputs.WPCLI_VERSION }}"
-
-          # Generate WordPress fpm Dockerfile
-          WORDPRESS_SHA1="$(curl -fsSL "https://wordpress.org/wordpress-$WORDPRESS_VERSION.tar.gz.sha1")"
-          sed \
-            -e "s/%%PHP_VERSION%%/${PHP_VERSION}/g" \
-            -e "s/%%WORDPRESS_VERSION%%/${WORDPRESS_VERSION}/g" \
-            -e "s/%%WORDPRESS_SHA1%%/${WORDPRESS_SHA1}/g" \
-            Dockerfile-fpm.template > fpm/Dockerfile
-
-          # Generate WP-CLI Dockerfile
-          WPCLI_SHA512="$(curl -fsSL "https://github.com/wp-cli/wp-cli/releases/download/v${WPCLI_VERSION}/wp-cli-${WPCLI_VERSION}.phar.sha512")"
-          sed \
-            -e "s/%%WPCLI_VERSION%%/${WPCLI_VERSION}/g" \
-            -e "s/%%WPCLI_SHA512%%/${WPCLI_SHA512}/g" \
-            Dockerfile-cli.template > cli/Dockerfile
+        run: ./update.sh
 
       - name: Check for changes
         id: changes
@@ -62,8 +32,8 @@ jobs:
           git config user.email "j+bot@joshbetz.com"
           git config user.name "Josh Bot"
 
-          WORDPRESS_VERSION="${{ steps.check.outputs.WORDPRESS_VERSION }}"
-          WPCLI_VERSION="${{ steps.check.outputs.WPCLI_VERSION }}"
+          WORDPRESS_VERSION=$(grep -oP 'ENV WORDPRESS_VERSION \K.*' fpm/Dockerfile)
+          WPCLI_VERSION=$(grep -oP 'ENV WPCLI_VERSION \K.*' cli/Dockerfile)
 
           # Commit fpm changes if any
           if ! git diff --quiet fpm/Dockerfile; then
