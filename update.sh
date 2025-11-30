@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Generates Dockerfiles from templates using the latest upstream versions.
-# This script only updates the Dockerfiles - it does not build images.
+# If running in CI and changes are detected, commits and pushes the changes.
 #
 # Usage: ./update.sh
 #
@@ -69,3 +69,32 @@ sed \
 	$DIR/Dockerfile-cli.template > $DIR/cli/Dockerfile
 
 echo "Dockerfiles updated successfully."
+
+# Check if there are changes
+if git diff --quiet --exit-code $DIR/fpm $DIR/cli; then
+	echo "No changes detected. Exiting."
+	exit 0
+fi
+
+# Show changes
+git diff $DIR/fpm/Dockerfile $DIR/cli/Dockerfile
+
+# Commit changes (if running in CI)
+if [ -n "$CI" ]; then
+	# Configure git user for CI environment
+	# Use environment variables if set, otherwise use defaults
+	git config user.email "${GIT_USER_EMAIL:-j+bot@joshbetz.com}"
+	git config user.name "${GIT_USER_NAME:-Josh Bot}"
+
+	if ! git diff --quiet --exit-code $DIR/fpm; then
+		git add $DIR/fpm
+		git commit -m "WordPress $WORDPRESS_VERSION"
+	fi
+
+	if ! git diff --quiet --exit-code $DIR/cli; then
+		git add $DIR/cli
+		git commit -m "WP-CLI $WPCLI_VERSION"
+	fi
+
+	git push
+fi
