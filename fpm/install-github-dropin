@@ -7,8 +7,9 @@ plugin=(${plugin//\// })
 # Required second parameter: dropin file name
 dropin=$2
 
-# Optional third parameter: tag or sha to checkout (defaults to main)
-ref=${3:-main}
+# Optional third parameter: tag or sha to checkout.
+# If not provided, detect the repo's default branch via GitHub API.
+ref=$3
 
 set -ex
 
@@ -16,14 +17,24 @@ DROPIN_PATH=/var/www/wp-content
 
 mkdir -p "$DROPIN_PATH"
 
-curl -L -o "${plugin[1]}.tar.gz" \
-	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}/"
+# Detect default branch when ref is not provided
+if [[ -z "$ref" ]]; then
+	ref=$(curl -s -H "Accept: application/vnd.github+json" -H "User-Agent: docker-wordpress" "https://api.github.com/repos/${plugin[0]}/${plugin[1]}" | jq -r .default_branch)
+fi
+
+curl -fL -o "${plugin[1]}.tar.gz" \
+	-H "User-Agent: docker-wordpress" \
+	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}"
 
 plugin="${plugin[1]}"
 
 mkdir -p "/var/www/wp-content/${plugin}"
 tar -xzf "${plugin}.tar.gz" --strip-components 1 -C "${DROPIN_PATH}/${plugin}"
 
+if [[ ! -f "${DROPIN_PATH}/${plugin}/${dropin}" ]]; then
+	echo "Drop-in file ${dropin} not found in ${plugin} at ref ${ref}" >&2
+	exit 2
+fi
 mv "${DROPIN_PATH}/${plugin}/${dropin}" "$DROPIN_PATH"
 
 rm "${plugin}.tar.gz"

@@ -7,8 +7,9 @@ plugin=(${plugin//\// })
 # Optional second parameter: directory (defaults to mu-plugins)
 directory=${2:-mu-plugins}
 
-# Optional third parameter: tag or sha to checkout (defaults to main)
-ref=${3:-main}
+# Optional third parameter: tag or sha to checkout.
+# If not provided, detect the repo's default branch via GitHub API.
+ref=$3
 
 set -ex
 
@@ -26,8 +27,13 @@ esac;
 
 mkdir -p "$DIRECTORY"
 
-curl -L -o "${plugin[1]}.tar.gz" \
-	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}/"
+if [[ -z "$ref" ]]; then
+	ref=$(curl -s -H "Accept: application/vnd.github+json" -H "User-Agent: docker-wordpress" "https://api.github.com/repos/${plugin[0]}/${plugin[1]}" | jq -r .default_branch)
+fi
+
+curl -fL -o "${plugin[1]}.tar.gz" \
+	-H "User-Agent: docker-wordpress" \
+	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}"
 
 plugin="${plugin[1]}"
 
