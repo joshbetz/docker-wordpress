@@ -35,8 +35,9 @@ fi
 # Commit changes (if running in CI)
 if [ -n "$CI" ]; then
 	# Configure git user for CI environment
-	git config user.email "j+bot@joshbetz.com"
-	git config user.name "Josh Bot"
+	# Use environment variables if set, otherwise use defaults
+	git config user.email "${GIT_USER_EMAIL:-j+bot@joshbetz.com}"
+	git config user.name "${GIT_USER_NAME:-Josh Bot}"
 
 	WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' $DIR/fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
 	WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' $DIR/cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
