@@ -14,37 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Dockerfiles from templates
-        run: ./update.sh
-
-      - name: Check for changes
-        id: changes
-        run: |
-          if git diff --quiet fpm/Dockerfile cli/Dockerfile; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          git config user.email "j+bot@joshbetz.com"
-          git config user.name "Josh Bot"
-
-          WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
-          WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
-
-          # Commit fpm changes if any
-          if ! git diff --quiet fpm/Dockerfile; then
-            git add fpm/Dockerfile
-            git commit -m "WordPress $WORDPRESS_VERSION"
-          fi
-
-          # Commit cli changes if any
-          if ! git diff --quiet cli/Dockerfile; then
-            git add cli/Dockerfile
-            git commit -m "WP-CLI $WPCLI_VERSION"
-          fi
-
-          git push
+      - name: Check for updates and commit changes
+        run: ./ci.sh commit-only
