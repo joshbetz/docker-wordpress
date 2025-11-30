@@ -32,8 +32,8 @@ jobs:
           git config user.email "j+bot@joshbetz.com"
           git config user.name "Josh Bot"
 
-          WORDPRESS_VERSION=$(grep -oP 'ENV WORDPRESS_VERSION \K.*' fpm/Dockerfile)
-          WPCLI_VERSION=$(grep -oP 'ENV WPCLI_VERSION \K.*' cli/Dockerfile)
+          WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
+          WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
 
           # Commit fpm changes if any
           if ! git diff --quiet fpm/Dockerfile; then

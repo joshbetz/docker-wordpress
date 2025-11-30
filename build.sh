@@ -13,9 +13,9 @@ set -eo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 action=$1
 
-# Extract versions from Dockerfiles
-WORDPRESS_VERSION=$(grep -oP 'ENV WORDPRESS_VERSION \K.*' $DIR/fpm/Dockerfile)
-WPCLI_VERSION=$(grep -oP 'ENV WPCLI_VERSION \K.*' $DIR/cli/Dockerfile)
+# Extract versions from Dockerfiles using portable grep/sed
+WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' $DIR/fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
+WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' $DIR/cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
 
 if [ -z "$WORDPRESS_VERSION" ]; then
 	echo "Error: Could not extract WordPress version from fpm/Dockerfile"
@@ -31,7 +31,13 @@ echo "WordPress Version: $WORDPRESS_VERSION"
 echo "WP-CLI Version: $WPCLI_VERSION"
 
 # Create buildx builder if it doesn't exist
-docker buildx create --name wordpress --use --bootstrap 2>/dev/null || docker buildx use wordpress
+if ! docker buildx inspect wordpress > /dev/null 2>&1; then
+	echo "Creating buildx builder 'wordpress'..."
+	docker buildx create --name wordpress --use --bootstrap
+else
+	echo "Using existing buildx builder 'wordpress'..."
+	docker buildx use wordpress
+fi
 
 ###
 # Build WordPress FPM image

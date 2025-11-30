@@ -31,8 +31,8 @@ $DIR/build.sh $action
 
 # Commit changes (if running in CI)
 if [ -n "$CI" ]; then
-	WORDPRESS_VERSION=$(grep -oP 'ENV WORDPRESS_VERSION \K.*' $DIR/fpm/Dockerfile)
-	WPCLI_VERSION=$(grep -oP 'ENV WPCLI_VERSION \K.*' $DIR/cli/Dockerfile)
+	WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' $DIR/fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
+	WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' $DIR/cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
 
 	if ! git diff --quiet --exit-code $DIR/fpm; then
 		git add $DIR/fpm
