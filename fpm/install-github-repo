@@ -1,8 +1,14 @@
 #!/bin/bash
 
+# Required first parameter: GitHub repo in the form owner/repo
 plugin=$1
 plugin=(${plugin//\// })
+
+# Optional second parameter: directory (defaults to mu-plugins)
 directory=${2:-mu-plugins}
+
+# Optional third parameter: tag or sha to checkout (defaults to main)
+ref=${3:-main}
 
 set -ex
 
@@ -21,7 +27,7 @@ esac;
 mkdir -p "$DIRECTORY"
 
 curl -L -o "${plugin[1]}.tar.gz" \
-	"http://github.com/${plugin[0]}/${plugin[1]}/tarball/master/"
+	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}/"
 
 plugin="${plugin[1]}"
 

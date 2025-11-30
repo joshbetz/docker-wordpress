@@ -1,8 +1,14 @@
 #!/bin/bash
 
+# Required first parameter: GitHub repo in the form owner/repo
 plugin=$1
 plugin=(${plugin//\// })
+
+# Required second parameter: dropin file name
 dropin=$2
+
+# Optional third parameter: tag or sha to checkout (defaults to main)
+ref=${3:-main}
 
 set -ex
 
@@ -11,7 +17,7 @@ DROPIN_PATH=/var/www/wp-content
 mkdir -p "$DROPIN_PATH"
 
 curl -L -o "${plugin[1]}.tar.gz" \
-	"http://github.com/${plugin[0]}/${plugin[1]}/tarball/master/"
+	"https://github.com/${plugin[0]}/${plugin[1]}/tarball/${ref}/"
 
 plugin="${plugin[1]}"
 
