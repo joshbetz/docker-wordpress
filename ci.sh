@@ -3,10 +3,11 @@
 # CI script that checks for updates, generates Dockerfiles, and builds/pushes images.
 # This is the main entry point for the CI workflow.
 #
-# Usage: ./ci.sh [push]
+# Usage: ./ci.sh [push|commit-only]
 #
 # Options:
-#   push    Push images to Docker Hub after building
+#   push         Push images to Docker Hub after building
+#   commit-only  Only update and commit changes (skip building)
 #
 
 set -eo pipefail
@@ -26,11 +27,18 @@ fi
 # Show changes
 git diff $DIR/fpm/Dockerfile $DIR/cli/Dockerfile
 
-# Build and optionally push
-$DIR/build.sh $action
+# Build and optionally push (skip if commit-only)
+if [ "$action" != "commit-only" ]; then
+	$DIR/build.sh $action
+fi
 
 # Commit changes (if running in CI)
 if [ -n "$CI" ]; then
+	# Configure git user for CI environment
+	# Use environment variables if set, otherwise use defaults
+	git config user.email "${GIT_USER_EMAIL:-j+bot@joshbetz.com}"
+	git config user.name "${GIT_USER_NAME:-Josh Bot}"
+
 	WORDPRESS_VERSION=$(grep 'ENV WORDPRESS_VERSION' $DIR/fpm/Dockerfile | sed 's/ENV WORDPRESS_VERSION //')
 	WPCLI_VERSION=$(grep 'ENV WPCLI_VERSION' $DIR/cli/Dockerfile | sed 's/ENV WPCLI_VERSION //')
 
