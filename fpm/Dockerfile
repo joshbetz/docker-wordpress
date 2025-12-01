@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -34,11 +34,11 @@ RUN set -ex; \
 		zip \
 	; \
 	pecl install \
-		apcu-5.1.24 \
+		apcu-5.1.27 \
 		igbinary-3.2.16 \
-		imagick-3.8.0 \
+		imagick-3.8.1 \
 		memcache-8.2 \
-		memcached-3.3.0 \
+		memcached-3.4.0 \
 	; \
 	docker-php-ext-enable \
 		apcu \
