@@ -47,20 +47,6 @@ RUN set -ex; \
 		memcache \
 		memcached \
 	; \
-	# Remove development headers after building extensions to slim the image \
-	apt-get purge -y \
-		libavif-dev \
-		libfreetype6-dev \
-		libicu-dev \
-		libjpeg-dev \
-		libmagickwand-dev \
-		libmemcached-dev \
-		libpng-dev \
-		libssl-dev \
-		libwebp-dev \
-		libzip-dev \
-		zlib1g-dev \
-	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
