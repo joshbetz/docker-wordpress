@@ -46,12 +46,16 @@ echo "Building WordPress FPM image..."
 if [[ "push" == "$action" ]]; then
 	docker buildx build --push \
 		--platform linux/amd64,linux/arm64 \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--cache-from type=registry,ref=joshbetz/wordpress:latest \
 		-t joshbetz/wordpress:latest \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION \
 		$DIR/fpm
 else
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--cache-from type=registry,ref=joshbetz/wordpress:latest \
 		-t joshbetz/wordpress:latest \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION \
 		$DIR/fpm
@@ -64,6 +68,8 @@ echo "Building WP-CLI image..."
 if [[ "push" == "$action" ]]; then
 	docker buildx build --push \
 		--platform linux/amd64,linux/arm64 \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--cache-from type=registry,ref=joshbetz/wordpress:cli \
 		-t joshbetz/wordpress:cli \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION-cli \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION \
@@ -71,6 +77,8 @@ if [[ "push" == "$action" ]]; then
 else
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--cache-from type=registry,ref=joshbetz/wordpress:cli \
 		-t joshbetz/wordpress:cli \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION-cli \
 		-t joshbetz/wordpress:$WORDPRESS_VERSION-cli-$WPCLI_VERSION \
