@@ -56,8 +56,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 # see https://secure.php.net/manual/en/opcache.installation.php
 COPY wordpress.ini /usr/local/etc/php/conf.d/wordpress.ini
 
-ENV WORDPRESS_VERSION 6.9.4
-ENV WORDPRESS_SHA1 018542f4c3e15db0d8e38aaf0fcf1b5dc56dbb79
+ENV WORDPRESS_VERSION 7.0
+ENV WORDPRESS_SHA1 e50bb75667ecaa0eac0694fb3c7b024afc96fde0
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
