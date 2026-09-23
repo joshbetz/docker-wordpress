@@ -9,10 +9,32 @@ jobs:
   check-updates:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      changed: ${{ steps.update.outputs.changed }}
+      commit: ${{ steps.update.outputs.commit }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for updates and commit changes
-        run: ./update.sh
+        id: update
+        run: |
+          before=$(git rev-parse HEAD)
+          ./update.sh
+          after=$(git rev-parse HEAD)
+          echo "commit=$after" >> "$GITHUB_OUTPUT"
+
+          if [ "$before" != "$after" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-push:
+    needs: check-updates
+    if: needs.check-updates.outputs.changed == 'true'
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      ref: ${{ needs.check-updates.outputs.commit }}
+    secrets: inherit
